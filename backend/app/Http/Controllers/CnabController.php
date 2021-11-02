@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CnabHelper;
 use App\Http\Resources\CnabResource;
 use App\Models\CNAB;
 use Illuminate\Http\Request;
@@ -34,10 +35,33 @@ class CnabController extends Controller
     public function store(Request $request)
     {
         try {
+            $handleFile = CnabHelper::loadFile($request->file('file'));
 
+            while (($string = fgets($handleFile)) !== false) {
+                $model = new CNAB();
+                
+                $model->tipo     = intval(CnabHelper::retrieveInfo($string, 0, 1));
+                $model->data     = CnabHelper::retrieveInfo($string, 1, 8);
+                $model->valor    = CnabHelper::normalizeValue(CnabHelper::retrieveInfo($string, 9, 10));
+                $model->cpf      = CnabHelper::retrieveInfo($string, 19, 11);
+                $model->cartao   = CnabHelper::retrieveInfo($string, 30, 12);
+                $model->hora     = CnabHelper::retrieveInfo($string, 42, 6);
+                $model->donoLoja = trim(CnabHelper::retrieveInfo($string, 48, 14));
+                $model->nomeLoja = trim(CnabHelper::retrieveInfo($string, 62, 19));
+
+                $model->save();
+            }
+
+            fclose($handleFile);
+
+            return response()->json([
+                'status'  => 'created',
+                'message' => $model->getTable() . ' created successfully',
+                'more' => 'Error in line ' . $string,
+            ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => $e->getMessage()
             ], 400);
         }
