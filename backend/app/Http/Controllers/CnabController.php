@@ -57,7 +57,6 @@ class CnabController extends Controller
             return response()->json([
                 'status'  => 'created',
                 'message' => $model->getTable() . ' created successfully',
-                'more' => 'Error in line ' . $string,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
