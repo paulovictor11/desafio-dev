@@ -7,7 +7,7 @@ export function Auth() {
     const history = useHistory();
 
     function handleLogin() {
-        history.push('/home');
+        history.replace('/home');
     }
 
     return (

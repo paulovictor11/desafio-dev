@@ -1,0 +1,46 @@
+.card {
+    background: #fefefe;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    padding: 24px 0;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    border-left: 4px solid #835afd;
+
+    & + .card {
+        margin-top: 24px;
+    }
+
+    .cardItem {
+        span {
+            font: 400 14px 'Roboto', sans-serif;
+            color: grey
+        }
+
+        p {
+            font: 400 19px 'Roboto', sans-serif;
+            margin-top: 10px;
+        }
+    }
+
+    .cardActions {
+        span {
+            font: 400 14px 'Roboto', sans-serif;
+        }
+
+        .actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+
+            > svg {
+                font-size: 20px !important;
+                color: rgba($color: #000, $alpha: 0.65);
+                cursor: pointer;
+            }
+        }
+    }
+}
