@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CnabResource;
 use App\Models\CNAB;
 use Illuminate\Http\Request;
 
 class CnabController extends Controller
 {
-    private $model;
-
-    public function __construct(CNAB $model)
-    {
-        $this->model = $model;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -21,8 +16,7 @@ class CnabController extends Controller
     public function index()
     {
         try {
-            $data = $this->model->all();
-            return response()->json($data, 200);
+            return CnabResource::collection(CNAB::all());
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -39,7 +33,14 @@ class CnabController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -51,8 +52,7 @@ class CnabController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->model->findOrFail($id);
-            return response()->json($data, 200);
+            return new CnabResource(CNAB::findOrFail($id));
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -71,12 +71,13 @@ class CnabController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->model->fill($request->all());
-            $this->model->save();
+            $model = new CNAB();
+            $model->fill($request->all());
+            $model->save();
 
             return response()->json([
                 'status'  => 'updated',
-                'message' =>  $this->model->getTable() . ' updated successfully'
+                'message' =>  $model->getTable() . ' updated successfully'
             ], 201);
         } catch(\Exception $e) {
             return response()->json([
@@ -95,12 +96,12 @@ class CnabController extends Controller
     public function destroy($id)
     {
         try {
-            $data = $this->model->findOrFail($id);
-            $data->delete();
+            $model = CNAB::findOrFail($id);
+            $model->delete();
 
             return response()->json([
                 'status' => 'deleted',
-                'message' => $this->model->getTable() . ' deleted successfully'
+                'message' => $model->getTable() . ' deleted successfully'
             ], 200);
         } catch(\Exception $e) {
             return response()->json([

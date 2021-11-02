@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TipoCollection;
+use App\Http\Resources\TipoResource;
 use App\Models\Tipos;
 use App\Transformers\TiposTransformer;
 use Illuminate\Http\Request;
 
 class TipoController extends Controller
 {
-    private $model;
-
-    public function __construct(Tipos $model)
-    {
-        $this->model = $model;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -23,8 +18,7 @@ class TipoController extends Controller
     public function index()
     {
         try {
-            $data = $this->model->all();
-            return response()->json($data, 200);
+            return TipoResource::collection(Tipos::all());
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -42,12 +36,13 @@ class TipoController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->model->fill($request->all());
-            $this->model->save();
+            $model = new Tipos();
+            $model->fill($request->all());
+            $model->save();
 
             return response()->json([
                 'status'  => 'created',
-                'message' =>  $this->model->getTable() . ' created successfully'
+                'message' =>  $model->getTable() . ' created successfully'
             ], 201);
         } catch(\Exception $e) {
             return response()->json([
@@ -66,8 +61,7 @@ class TipoController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->model->findOrFail($id);
-            return response()->json($data, 200);
+            return new TipoResource(Tipos::findOrFail($id));
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -86,12 +80,13 @@ class TipoController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->model->fill($request->all());
-            $this->model->save();
+            $model = new Tipos();
+            $model->fill($request->all());
+            $model->save();
 
             return response()->json([
                 'status'  => 'updated',
-                'message' =>  $this->model->getTable() . ' updated successfully'
+                'message' =>  $model->getTable() . ' updated successfully'
             ], 201);
         } catch(\Exception $e) {
             return response()->json([
@@ -110,12 +105,12 @@ class TipoController extends Controller
     public function destroy($id)
     {
         try {
-            $data = $this->model->findOrFail($id);
-            $data->delete();
+            $model = Tipos::findOrFail($id);
+            $model->delete();
 
             return response()->json([
                 'status' => 'deleted',
-                'message' => $this->model->getTable() . ' deleted successfully'
+                'message' => $model->getTable() . ' deleted successfully'
             ], 200);
         } catch(\Exception $e) {
             return response()->json([
