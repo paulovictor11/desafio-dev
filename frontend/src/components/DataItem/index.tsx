@@ -1,74 +1,71 @@
 import styles from './styles.module.scss'
 
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from 'react-icons/bs'
-
-export type CNAB = {
-    id: string;
-    tipo: string;
-    data: string;
-    valor: string;
-    cpf: string;
-    cartao: string;
-    hora: string;
-    donoLoja: string;
-    nomeLoja: string;
-}
+import { CnabComTipo } from '../DataList';
 
 type Props = {
-    data: CNAB;
+    data: CnabComTipo;
 }
 
 export function DataItem({ data }: Props) {
 
-    function handleView(item: CNAB) {
+    function handleView(item: CnabComTipo) {
         alert(JSON.stringify(item));
     }
 
-    function handleEdit(item: CNAB) {
+    function handleEdit(item: CnabComTipo) {
 
     }
 
-    function handleDelete(item: CNAB) {
+    function handleDelete(item: CnabComTipo) {
         if (confirm('Tem certeza que deseja deletar?')) {
-            alert('CNAB delete com sucesso!');
+            alert('CnabComTipo delete com sucesso!');
         }
+    }
+
+    function formartDate(date: string) {
+        const year = date.substr(0, 4);
+        const month = date.substr(4, 2);
+        const day = date.substr(6, 2);
+
+        return `${day}/${month}/${year}`;
     }
 
     return (
         <div className={styles.card}>
-            <div className={styles.cardItem}>
-                <span>Dono da Loja</span>
-                <p>{data.donoLoja}</p>
-            </div>
-
             <div className={styles.cardItem}>
                 <span>Loja</span>
                 <p>{data.nomeLoja}</p>
             </div>
 
             <div className={styles.cardItem}>
-                <span>Beneficiário</span>
-                <p>{data.cpf}</p>
+                <span>Natureza</span>
+                <p>{data.natureza}</p>
             </div>
 
             <div className={styles.cardItem}>
-                <span>Valor</span>
-                <p>R$ {data.valor}</p>
+                <span>Descricao</span>
+                <p>{data.descricao}</p>
             </div>
 
             <div className={styles.cardItem}>
                 <span>Data</span>
-                <p>{data.data}</p>
+                <p>{formartDate(data.data)}</p>
             </div>
 
-            <div className={styles.cardActions}>
+            <div className={styles.cardItem}>
+                <span>Valor</span>
+                <p>R$ {Number(data.valor).toFixed(2)}</p>
+            </div>
+
+            {/* <div className={styles.cardActions}>
                 <span>Ações</span>
                 <div className={styles.actions}>
                     <BsEyeFill onClick={() => handleView(data)} />
                     <BsPencilSquare onClick={() => handleEdit(data)} />
                     <BsTrashFill onClick={() => handleDelete(data)} />
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

@@ -1,52 +1,23 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Button } from '../../components/Button';
-import { CNAB, DataItem } from '../../components/DataItem';
+import { DataItem } from '../../components/DataItem';
+import { Cnabs, DataList } from '../../components/DataList';
 import { Input } from '../../components/Input';
 import { Upload } from '../../components/Upload';
+import { api } from '../../services/api';
 import styles from './styles.module.scss'
 
 export function Home() {
     const history = useHistory();
 
-    const [documents, setDocuments] = useState<CNAB[]>([]);
+    const [documents, setDocuments] = useState<Cnabs[]>([]);
     const [file, setFile] = useState<File | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    // const cnabs: CNAB[] = [
-    //     {
-    //         id: '1',
-    //         tipo: '1',
-    //         data: '02/11/2021',
-    //         valor: '20,00',
-    //         cpf: '111.222.333-44',
-    //         cartao: '123456789987654',
-    //         hora: '12:21',
-    //         donoLoja: 'Fulano de tal',
-    //         nomeLoja: 'Lojinha'
-    //     },
-    //     {
-    //         id: '2',
-    //         tipo: '1',
-    //         data: '02/11/2021',
-    //         valor: '20,00',
-    //         cpf: '111.222.333-44',
-    //         cartao: '123456789987654',
-    //         hora: '12:21',
-    //         donoLoja: 'Fulano de tal',
-    //         nomeLoja: 'Lojinha'
-    //     },
-    //     {
-    //         id: '3',
-    //         tipo: '1',
-    //         data: '02/11/2021',
-    //         valor: '20,00',
-    //         cpf: '111.222.333-44',
-    //         cartao: '123456789987654',
-    //         hora: '12:21',
-    //         donoLoja: 'Fulano de tal',
-    //         nomeLoja: 'Lojinha'
-    //     }
-    // ];
+    useEffect(() => {
+        listDocuments();
+    }, []);
 
     function handleSignOut() {
         history.replace('');
@@ -57,7 +28,7 @@ export function Home() {
         setFile(file);
     }
 
-    function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+    async function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         
         if (file == null) {
@@ -65,7 +36,38 @@ export function Home() {
             return;
         }
 
-        alert(`Arquivo ${file.name} enviado com sucesso`);
+        try {
+            setLoading(true);
+
+            const data = new FormData();
+            data.append('file', file);
+
+            await api.post('/cnabs', data);
+            
+            alert(`Arquivo ${file.name} enviado com sucesso`);
+
+            await listDocuments();
+
+            setFile(null);
+            setLoading(false);
+        } catch (err: any) {
+            alert('Não foi possível enviar o arquivo, por favor tente mais tarde');
+            setLoading(false);
+        }
+    }
+
+    async function listDocuments() {
+        try {
+            setLoading(true);
+
+            const response = await api.get<Cnabs[]>('/cnab/operacao');
+            setDocuments(response.data);
+
+            setLoading(false);
+        } catch (err: any) {
+            alert('Não foi possível listar os CNABs no momento, por favor tente mais tarde');
+            setLoading(false);
+        }
     }
 
     return (
@@ -85,17 +87,22 @@ export function Home() {
 
                 <div className={styles.dataList}>
                     {
-                        documents.length == 0
+                        loading &&
+                        <span className={styles.emptyList}>
+                            <i>Carregando...</i>
+                        </span>
+                    }
+
+                    {
+                        documents.length == 0 && !loading
                         ? (
-                            <div>
-                                <span className={styles.emptyList}>
-                                    <i>Não há CNABs cadastrados no sistema</i>
-                                </span>
-                            </div>
+                            <span className={styles.emptyList}>
+                                <i>Não há CNABs cadastrados no sistema</i>
+                            </span>
                         )
                         : (
-                            documents.map((item: CNAB) => (
-                                <DataItem key={item.id} data={item} />
+                            documents.map((item: Cnabs) => (
+                                <DataList data={item} />
                             ))
                         )
                     }
