@@ -1,0 +1,71 @@
+.pageAuth {
+    display: flex;
+    align-items: stretch;
+    height: 100vh;
+
+    aside {
+        flex: 7;
+
+        background: #835afd;
+        color: #fff;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 120px 80px;
+
+        strong {
+            font: 700 36px 'Roboto', sans-serif;
+            line-height: 42px;
+            margin-top: 16px;
+        }
+
+        p {
+            font-size: 24px;
+            line-height: 32px;
+            margin-top: 8px;
+            color: #f8f8f8;
+        }
+    }
+
+    main {
+        flex: 8;
+
+        padding: 0 32px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mainContent {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+        align-items: stretch;
+        text-align: center;
+
+        h2 {
+            margin: 64px 0 24px;
+            font: 700 36px 'Roboto', sans-serif;
+        }
+
+        form {
+            margin-top: 24px;
+            width: 100%;
+
+            button {
+                margin-top: 16px;
+            }
+
+            input + input {
+                margin-top: 8px;
+            }
+
+            button, input {
+                width: 100%;
+            }
+        }
+    }
+}
