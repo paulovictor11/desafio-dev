@@ -143,11 +143,11 @@ class CnabController extends Controller
     public function byOperation()
     {
         try {
-            $all = CNAB::all();
+            $donos = CNAB::listAllDonos();
             $data = [];
 
-            foreach($all as $key => $value) {
-                $lojas = CNAB::findByLoja($value->nomeLoja);
+            foreach($donos as $key => $value) {
+                $lojas = CNAB::findByDono($value->donoLoja);
 
                 $data[$key]['dono'] = $value->donoLoja;
                 $data[$key]['lojas'] = $lojas;

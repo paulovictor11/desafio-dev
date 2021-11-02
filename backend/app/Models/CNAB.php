@@ -16,12 +16,17 @@ class CNAB extends Model
         return $this->belongsTo(Tipos::class);
     }
 
-    public static function findByLoja($loja)
+    public static function findByDono($nome)
     {
         return DB::table('cnabs as c')
                     ->join('tipos_transacoes as t', 'c.tipo', '=', 't.id')
                     ->select('c.tipo', 't.descricao', 't.natureza', 'c.data', 'c.valor', 'c.hora', 'c.donoLoja', 'c.nomeLoja')
-                    ->where('c.nomeLoja', '=', $loja)
+                    ->where('c.donoLoja', '=', $nome)
                     ->get();
+    }
+
+    public static function listAllDonos()
+    {
+        return DB::table('cnabs')->select('donoLoja')->distinct()->get();
     }
 }
