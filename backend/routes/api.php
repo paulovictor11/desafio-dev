@@ -17,4 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([])->group(function (Router $router) {
     $router->apiResource('tipos', 'TipoController');
     $router->apiResource('cnabs', 'CnabController');
+    $router->get('/cnab/operacao', 'CnabController@byOperation');
 });

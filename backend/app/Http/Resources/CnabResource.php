@@ -17,7 +17,6 @@ class CnabResource extends JsonResource
         return [
             'id' => $this->id,
             'tipo' => $this->tipo,
-            'tipoDescricao' => $this->tipos->descricao,
             'data' => $this->data,
             'valor' => $this->valor,
             'cpf' => $this->cpf,

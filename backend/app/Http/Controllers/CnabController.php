@@ -134,4 +134,42 @@ class CnabController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * Display a listing of the resource by operation.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function byOperation()
+    {
+        try {
+            $all = CNAB::all();
+            $data = [];
+
+            foreach($all as $key => $value) {
+                $lojas = CNAB::findByLoja($value->nomeLoja);
+
+                $data[$key]['dono'] = $value->donoLoja;
+                $data[$key]['lojas'] = $lojas;
+
+                $valorSaldo = 0.0;
+                foreach($lojas as $l) {
+                    if ($l->natureza == 'Saída') {
+                        $valorSaldo -= floatval($l->valor);
+                    } else {
+                        $valorSaldo += floatval($l->valor);
+                    }
+                }
+
+                $data[$key]['saldoTotal'] = $valorSaldo;
+            }
+
+            return response()->json($data, 200);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
 }
