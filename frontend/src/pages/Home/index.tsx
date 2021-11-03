@@ -1,15 +1,17 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { useHistory } from 'react-router';
 import { Button } from '../../components/Button';
-import { DataItem } from '../../components/DataItem';
 import { Cnabs, DataList } from '../../components/DataList';
-import { Input } from '../../components/Input';
 import { Upload } from '../../components/Upload';
+import { AuthContext } from '../../contexts/auth';
 import { api } from '../../services/api';
-import styles from './styles.module.scss'
+import styles from './styles.module.scss';
 
 export function Home() {
     const history = useHistory();
+
+    const { signOut } = useContext(AuthContext);
 
     const [documents, setDocuments] = useState<Cnabs[]>([]);
     const [file, setFile] = useState<File | null>(null);
@@ -20,6 +22,7 @@ export function Home() {
     }, []);
 
     function handleSignOut() {
+        signOut();
         history.replace('');
     }
 
@@ -30,9 +33,9 @@ export function Home() {
 
     async function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        
+
         if (file == null) {
-            alert('Por favor selecione um arquivo');
+            toast.error('Por favor selecione um arquivo');
             return;
         }
 
@@ -43,15 +46,17 @@ export function Home() {
             data.append('file', file);
 
             await api.post('/cnabs', data);
-            
-            alert(`Arquivo ${file.name} enviado com sucesso`);
+
+            toast.success(`Arquivo ${file.name} enviado com sucesso`);
 
             await listDocuments();
 
             setFile(null);
             setLoading(false);
         } catch (err: any) {
-            alert('Não foi possível enviar o arquivo, por favor tente mais tarde');
+            toast.error(
+                'Não foi possível enviar o arquivo, por favor tente mais tarde'
+            );
             setLoading(false);
         }
     }
@@ -60,22 +65,32 @@ export function Home() {
         try {
             setLoading(true);
 
+            const access_token = localStorage.getItem('@frontend:token');
+
+            api.defaults.headers.common.authorization = `Bearer ${access_token}`;
+
             const response = await api.get<Cnabs[]>('/cnab/operacao');
             setDocuments(response.data);
 
             setLoading(false);
         } catch (err: any) {
-            alert('Não foi possível listar os CNABs no momento, por favor tente mais tarde');
+            toast.error(
+                'Não foi possível listar os CNABs no momento, por favor tente mais tarde'
+            );
             setLoading(false);
         }
     }
 
     return (
         <div className={styles.pageHome}>
+            <Toaster position="top-center" reverseOrder={false} />
+
             <header>
                 <div className={styles.content}>
                     <h2>Desafio Dev</h2>
-                    <Button isOutlined onClick={handleSignOut}>Sair</Button>
+                    <Button isOutlined onClick={handleSignOut}>
+                        Sair
+                    </Button>
                 </div>
             </header>
 
@@ -86,26 +101,21 @@ export function Home() {
                 </form>
 
                 <div className={styles.dataList}>
-                    {
-                        loading &&
+                    {loading && (
                         <span className={styles.emptyList}>
                             <i>Carregando...</i>
                         </span>
-                    }
+                    )}
 
-                    {
-                        documents.length == 0 && !loading
-                        ? (
-                            <span className={styles.emptyList}>
-                                <i>Não há CNABs cadastrados no sistema</i>
-                            </span>
-                        )
-                        : (
-                            documents.map((item: Cnabs) => (
-                                <DataList data={item} />
-                            ))
-                        )
-                    }
+                    {documents.length == 0 && !loading ? (
+                        <span className={styles.emptyList}>
+                            <i>Não há CNABs cadastrados no sistema</i>
+                        </span>
+                    ) : (
+                        documents.map((item: Cnabs, index: number) => (
+                            <DataList key={index} data={item} />
+                        ))
+                    )}
                 </div>
             </main>
         </div>
