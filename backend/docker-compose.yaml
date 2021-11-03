@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+  laravel-app:
+    container_name: laravel-app
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/usr/share/nginx
+
+  mariadb:
+    image: mariadb
+    container_name: database-mariadb
+    restart: always
+    ports:
+      - "3307:3306"
+    volumes:
+      - "db-data:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  adminer:
+    image: adminer
+    container_name: adminer-mariadb
+    restart: always
+    ports:
+      - 8081:8080
+
+volumes:
+  db-data:
