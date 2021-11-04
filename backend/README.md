@@ -1,11 +1,11 @@
 # Backend
 
-Este projeto foi criado utilizando o framework 'LARAVEL'.
+Este projeto foi criado utilizando o framework `LARAVEL`.
 
 
 ### Ferramentas
 
-Foi utlizado neste projeto o 'composer', para a gerenência de bibliotecas do pro, e o 'docker', para a execução do projeto, como também do banco de dados
+Foi utlizado neste projeto o `composer`, para a gerenência de bibliotecas do projeto, e o `docker`, para a execução do projeto, como também do banco de dados
 
 
 ### Instalando as dependências
@@ -20,9 +20,9 @@ para as dependências do projeto serem instaladas
 ### Variáveis de ambiente
 
 Algumas configurações se fazem necessária para a comunicação do backend com o banco de dados.
-Para isso, deve-se copiar o arquivo '.env.example', se encontra na raiz do projeto, e colar, também na raiz, renomeando para '.env'.
+Para isso, deve-se copiar o arquivo `.env.example`, se encontra na raiz do projeto, e colar, também na raiz, renomeando para `.env`.
 
-Feito isso, é preciso alterar as seguintes linhas nesse mesmo arquivo '.env':
+Feito isso, é preciso alterar as seguintes linhas nesse mesmo arquivo `.env`:
 ```
 DB_CONNECTION=mysql
 DB_HOST=<endereço_ipv3>
@@ -51,7 +51,7 @@ php artisan passport:install
 ```
 para cadastrar as chaves do cliente oauth no banco, responsável pela geração dos tokens e autenticação dos usuários cadastrados.
 
-O backend se encontrará disponível no endereço '<endereço_ipv4>:8000/api/(endpoints listados a baixo)', caso queiram acessar em programas como 'postman' e o 'insomnia'.
+O backend se encontrará disponível no endereço `<endereço_ipv4>:8000/api/(endpoints listados a baixo)`, caso queiram acessar em programas como `postman` e o `insomnia`.
 
 
 ### Rotas/Endpoints
@@ -78,4 +78,6 @@ O backend contempla os seguintes endpoints:
 
 ### Banco de dados
 
-Este projeto também disponibiliza uma forma de acessar/visualizar o banco de dados. Basta acessar no navegador o endereço '<endereço_ipv4>:8081'.
+Este projeto também disponibiliza uma forma de acessar/visualizar o banco de dados. Basta acessar no navegador o endereço `<endereço_ipv4>:8081`.
+
+Nos campos para autenticação no banco, digite `database-maria` para o servidor, usuário e senha os mesmos informados no arquivo `.env`.
