@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const url = 'http://<endereço_ipv4>';
+
 export const api = axios.create({
-    baseURL: 'http://192.168.0.9:8000/api'
+    baseURL: `${url}/api`
 });
