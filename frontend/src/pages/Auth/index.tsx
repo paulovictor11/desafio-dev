@@ -21,14 +21,22 @@ export function Auth() {
         const email = formData.get('email');
         const password = formData.get('password');
 
+        if (email == '' || password == '') {
+            toast.error('Por favor preencha os campos');
+            return;
+        }
+
         try {
+            setIsLoading(true);
             await signIn({ email, password } as UserForm);
 
-            toast.success('Usuário conectou com sucesso');
-
             history.replace('/home');
+            setIsLoading(false);
         } catch (err: any) {
-            toast.error('Não foi possível se conectar, por favor tente novamente mais tarde');
+            toast.error(
+                'Não foi possível se conectar, por favor tente novamente mais tarde'
+            );
+            setIsLoading(false);
         }
     }
 
@@ -58,15 +66,22 @@ export function Auth() {
                             placeholder="Senha"
                         />
 
-                        <Button type="submit" disabled={isLoading}>
-                            { isLoading ? 'Carregando...' : 'Conectar' }
+                        <Button
+                            type="submit"
+                            style={{
+                                opacity: isLoading ? 0.6 : 1,
+                                cursor: isLoading ? 'not-allowed' : '',
+                            }}>
+                            {isLoading ? 'Carregando...' : 'Conectar'}
                         </Button>
                     </form>
 
                     <p className={styles.link}>
-                        Ainda não possui uma conta? <Link to="/register">Clique aqui para se cadastrar.</Link>
+                        Ainda não possui uma conta?{' '}
+                        <Link to="/register">
+                            Clique aqui para se cadastrar.
+                        </Link>
                     </p>
-
                 </div>
             </main>
         </div>
