@@ -21,7 +21,7 @@ class CnabTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testPostOneTipo()
+    public function testPostOneCnab()
     {
         factory(Tipos::class, 9)->create();
 
@@ -43,7 +43,7 @@ class CnabTest extends TestCase
         ]);
     }
 
-    public function testGetOneTipo()
+    public function testGetOneCnab()
     {
         $cnab = factory(CNAB::class)->create();
 
@@ -56,7 +56,7 @@ class CnabTest extends TestCase
         ]);
     }
 
-    public function testPutOneTipo()
+    public function testPutOneCnab()
     {
         $cnab = factory(CNAB::class)->create();
         $data = ['donoLoja' => 'alterado'];
@@ -72,7 +72,7 @@ class CnabTest extends TestCase
         ]);
     }
 
-    public function testDeleteOneTipo()
+    public function testDeleteOneCnab()
     {
         $cnab = factory(CNAB::class)->create();
 

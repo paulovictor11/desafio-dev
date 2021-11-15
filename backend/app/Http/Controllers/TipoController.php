@@ -64,7 +64,7 @@ class TipoController extends Controller
             return new TipoResource(Tipos::findOrFail($id));
         } catch(\Exception $e) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'not found',
                 'message' => $e->getMessage()
             ], 404);
         }

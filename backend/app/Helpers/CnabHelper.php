@@ -6,10 +6,17 @@ class CnabHelper
 {
     public static function loadFile($file)
     {
-        $originalName = $file->getClientOriginalName();
-        $file->move('uploads', $originalName);
+        try {
+            $originalName = $file->getClientOriginalName();
+            $file->move('uploads', $originalName);
 
-        return fopen('uploads/' . $originalName, 'r');
+            return fopen('uploads/' . $originalName, 'r');
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public static function retrieveInfo($string, $offset, $length)

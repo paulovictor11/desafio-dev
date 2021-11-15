@@ -78,7 +78,7 @@ class CnabController extends Controller
             return new CnabResource(CNAB::findOrFail($id));
         } catch(\Exception $e) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'not found',
                 'message' => $e->getMessage()
             ], 404);
         }
