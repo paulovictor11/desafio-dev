@@ -80,14 +80,14 @@ class TipoController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $model = new Tipos();
+            $model = Tipos::findOrFail($id);
             $model->fill($request->all());
             $model->save();
 
             return response()->json([
                 'status'  => 'updated',
                 'message' =>  $model->getTable() . ' updated successfully'
-            ], 201);
+            ], 200);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
