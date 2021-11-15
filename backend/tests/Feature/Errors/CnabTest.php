@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Erros;
+namespace Tests\Feature\Errors;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
