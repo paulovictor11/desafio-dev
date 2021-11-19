@@ -1,34 +1,30 @@
-import { FormEvent, useContext, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { AuthContext, UserForm } from '../../contexts/auth';
 import styles from './styles.module.scss';
+import { useForm } from 'react-hook-form';
 
 export function Auth() {
     const history = useHistory();
 
     const { signIn } = useContext(AuthContext);
+    const { register, handleSubmit } = useForm<UserForm>();
 
     const [isLoading, setIsLoading] = useState(false);
 
-    async function handleLogin(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-
-        const formData = new FormData(event.currentTarget);
-        const email = formData.get('email');
-        const password = formData.get('password');
-
-        if (email == '' || password == '') {
-            toast.error('Por favor preencha os campos');
+    async function handleLogin(form: UserForm) {
+        if (form.email == '' || form.password == '') {
+            toast.error('Por favor, preencha os campos');
             return;
         }
 
         try {
             setIsLoading(true);
-            await signIn({ email, password } as UserForm);
+            await signIn(form);
 
             history.replace('/home');
             setIsLoading(false);
@@ -52,18 +48,18 @@ export function Auth() {
                 <div className={styles.mainContent}>
                     <h2>Desafio Dev</h2>
 
-                    <form onSubmit={handleLogin}>
+                    <form onSubmit={handleSubmit(handleLogin)}>
                         <Input
-                            type="email"
-                            name="email"
-                            id="email"
                             placeholder="Email"
+                            type="email"
+                            label="email"
+                            register={register}
                         />
                         <Input
-                            type="password"
-                            name="password"
-                            id="password"
                             placeholder="Senha"
+                            type="password"
+                            label="password"
+                            register={register}
                         />
 
                         <Button

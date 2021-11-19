@@ -1,4 +1,5 @@
 import { FormEvent, useContext, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast, Toaster } from 'react-hot-toast';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -11,18 +12,12 @@ export function Register() {
     const history = useHistory();
 
     const { register } = useContext(AuthContext);
+    const { register: formRegister, handleSubmit } = useForm<UserForm>();
 
     const [isLoading, setIsLoading] = useState(false);
 
-    async function handleRegister(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-
-        const formData = new FormData(event.currentTarget);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const password = formData.get('password');
-
-        if (email == '' || email == '' || password == '') {
+    async function handleRegister(form: UserForm) {
+        if (form.name == '' || form.email == '' || form.password == '') {
             toast.error('Por favor preencha os campos');
             return;
         }
@@ -30,10 +25,8 @@ export function Register() {
         try {
             setIsLoading(true);
             await register({
-                name,
-                email,
-                password,
-                password_confirmation: password,
+                ...form,
+                password_confirmation: form.password,
             } as UserForm);
 
             history.replace('/home');
@@ -58,24 +51,23 @@ export function Register() {
                 <div className={styles.mainContent}>
                     <h2>Desafio Dev</h2>
 
-                    <form onSubmit={handleRegister}>
+                    <form onSubmit={handleSubmit(handleRegister)}>
                         <Input
-                            type="text"
-                            name="name"
-                            id="name"
                             placeholder="Nome"
+                            label="name"
+                            register={formRegister}
                         />
                         <Input
-                            type="email"
-                            name="email"
-                            id="email"
                             placeholder="Email"
+                            type="email"
+                            label="email"
+                            register={formRegister}
                         />
                         <Input
-                            type="password"
-                            name="password"
-                            id="password"
                             placeholder="Senha"
+                            type="password"
+                            label="password"
+                            register={formRegister}
                         />
 
                         <Button
